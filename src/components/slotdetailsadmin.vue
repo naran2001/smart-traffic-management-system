@@ -1,0 +1,122 @@
+
+<template>
+  <div style="background-color: #f1f7fc;">
+    <br><br><br>
+      <div class="container">
+          <div class="section-title">
+            <h3 class="faqsection1" style="font-size: 45.8px; font-weight: bold; margin-top: 60px;">Smart Traffic Management System</h3>
+          </div>
+        <div class="row">
+          <div class="col">
+              <div class="card">
+                  <div class="card-body">
+                      <table class="table table-striped table-mobile-responsive table-mobile-sided">
+                          <thead>
+                            <tr>
+                                <th scope="col" style="text-align: center;"><b>Lane Name</b></th>
+                                <th scope="col" style="text-align: center;"><b>Lane Status</b></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(slotStatus, slotName) in parkingSlots" :key="slotName">
+                            <td style="text-align: center;">{{ slotName }}</td>
+                            <td style="text-align: center;">{{ slotStatus }}</td>
+                            </tr>
+                          </tbody>
+                      </table>
+                      
+                  </div>
+                </div>
+          </div>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+          <div class="col">
+              <div class="card">
+                  <div class="card-body">
+                      <table class="table table-striped table-mobile-responsive table-mobile-sided">
+                          <thead>
+                            <tr>
+                                <th scope="col" style="text-align: center;"><b>Gate  Name</b></th>
+                                <th scope="col" style="text-align: center;"><b>Gate Status</b></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(status, gate) in gateStatus" :key="gate">
+                              <td style="text-align: center;">{{ gate }}</td>
+                              <td style="text-align: center;">{{ status }}</td>
+                            </tr>
+                          </tbody>
+                      </table>
+                      
+                  </div>
+                </div>
+          </div>
+      </div>
+
+    </div>
+    <br><br>
+  </div>
+  </template>
+    
+    
+    <script>
+  import axios from 'axios';
+  
+  export default {
+    data() {
+      return {
+        gateStatus: {}, // To store gate status data
+        parkingSlots: {}, // To store parking slots data
+      };
+    },
+    mounted() {
+      this.getData(); // Fetch data initially
+      setInterval(this.getData, 2000); // Fetch data every 5 seconds
+    },
+    methods: {
+      getData() {
+        this.getGateStatus();
+        this.getParkingSlots();
+      },
+      getGateStatus() {
+        axios
+          .get('https://smart-traffic-managemanet-default-rtdb.firebaseio.com/Gate.json')
+          
+          .then((response) => {
+            this.gateStatus = response.data;
+          })
+          .catch((error) => {
+            console.error('Error fetching gate status:', error);
+          });
+      },
+      getParkingSlots() {
+        axios
+        .get('https://smart-traffic-managemanet-default-rtdb.firebaseio.com/Lane.json')
+          .then((response) => {
+            this.parkingSlots = response.data;
+          })
+          .catch((error) => {
+            console.error('Error fetching parking slots data:', error);
+          });
+      },
+    },
+  };
+  </script>
+    
+  <style>
+  .card {
+      margin-left: 200px
+    }
+  
+  
+    .faqsection1 {
+      text-align: center;
+      padding-bottom: 30px;
+  }
+  
+  </style>
+  
+  
